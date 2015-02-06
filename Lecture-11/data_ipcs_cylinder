@@ -1,0 +1,31 @@
+Solving IPCS0 with 2 order of velocity space
+Time step : 0.001
+Dofs used : 8864
+Cells used : 1872
+Mesh hmin : 0.0177051964033
+Functional : -0.106478129585
+Pressure and velocity look OK
+
+Solving IPCS0 with 1 order of velocity space
+Time step : 0.001
+Dofs used : 3072
+Cells used : 1872
+Mesh hmin : 0.0177051964033
+Functional : -0.106866328508
+Velocity OK, small oscillations in the pressure field
+
+Solving IPCS1 with 1 order of velocity space
+Time step : 0.001
+Dofs used : 3072
+Cells used : 1872
+Mesh hmin : 0.0177051964033
+Functional : -0.11111114651
+Velocity OK, small oscillations in the pressure field
+
+Solving IPCS1 with 2 order of velocity space
+Time step : 0.001
+Dofs used : 8864
+Cells used : 1872
+Mesh hmin : 0.0177051964033
+Functional : -0.104210385237
+Pressure and velocity look OK

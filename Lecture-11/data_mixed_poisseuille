@@ -1,0 +1,27 @@
+Solving with cnab form and 2 order of velocity space
+Time step : 0.01
+Dofs used : 9539
+Cells used : 2048
+Functional : 0.443215345302
+Pressure OK, velocity OK
+
+Solving with cnab form and 1 order of velocity space
+Time step : 0.01
+Dofs used : 3267
+Cells used : 2048
+Functional : 0.443485996551
+Pressure oscill, velocity OK
+
+Solving with simple form and 1 order of velocity space
+Time step : 0.01
+Dofs used : 3267
+Cells used : 2048
+Functional : 0.441422406845
+Pressure oscill, velocity OK
+
+Solving with simple form and 2 order of velocity space
+Time step : 0.01
+Dofs used : 9539
+Cells used : 2048
+Functional : 0.441155294377
+Pressure OK, velocity OK

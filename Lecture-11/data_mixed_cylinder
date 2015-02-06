@@ -1,0 +1,22 @@
+Solving with simple form and 2 order of velocity space
+Time step : 0.005
+Dofs used : 8864
+Cells used : 1872
+Mesh hmin : 0.0177051964033
+Functional : -0.0999008333832
+Von Karman Yes, Velocity OK, Pressure OK
+
+Solving with simple form and 1 order of velocity space
+Hangs
+
+Solving with cnab form and 2 order of velocity space
+Calling FFC just-in-time (JIT) compiler, this may take some time.
+Time step : 0.005
+Dofs used : 8864
+Cells used : 1872
+Mesh hmin : 0.0177051964033
+Functional : -0.108401152557
+Von Karman Yes, Velocity OK, Pressure OK
+
+Solving with cnab form and 1 order of velocity space
+Hangs

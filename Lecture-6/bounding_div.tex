@@ -1,0 +1,168 @@
+\documentclass[a4paper,11pt]{article}
+\pdfoptionpdfminorversion=5
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+
+\usepackage[square]{natbib}
+
+\usepackage[table]{xcolor}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{graphics}
+\usepackage{color}
+\usepackage{ifpdf}
+\ifpdf
+\DeclareGraphicsRule{*}{mps}{*}{}
+\fi
+\usepackage[utf8]{inputenc}
+
+\hoffset = 0pt
+\voffset = 0pt
+\oddsidemargin = 0pt
+\headheight = 15pt
+\footskip = 30pt
+\topmargin = 0pt
+\marginparsep = 5pt
+\headsep =25pt
+\marginparwidth = 54pt
+\marginparpush = 7pt
+\textheight = 621pt %621
+\textwidth = 500pt
+
+\newcommand{\norm}[1]{\ensuremath{\|#1\|}}
+\newcommand{\Div}[1] {\ensuremath{\text{div}#1}}
+\newcommand{\Grad}[1]{\ensuremath{\text{grad}#1}}
+\newcommand{\Curl}[1]{\ensuremath{\text{curl}#1}}
+
+\title{Bounding div}
+\author{Miroslav Kuchta}
+\date{2014}
+
+\begin{document}
+\maketitle
+
+In the following $\norm{\bullet}$ denotes $L^2$ norm over some bounded domain
+$\Omega$. The task is then to show that there exists constant $K>0$
+independent of mesh size such that $\norm{\Div{u}} \leq K\norm{\Grad{u}}$ where $u$ is a vector field in $H^1(\Omega)$. For simplicity we consider two
+dimensional case, i.e. $\Omega\subset\mathbb{R}^2$ and so $\Div{u}=\partial_1u_1 + \partial_2u_2$ and
+$\Grad{u}=\begin{bmatrix}
+\partial_1u_1 & \partial_2u_1\\
+\partial_1u_2 & \partial_2u_2\\
+\end{bmatrix}$.
+
+We will use two inequalities in our proof
+\begin{enumerate}
+\item Minkowski inequality: $\norm{f+g} \leq \norm{f} + \norm{g}$ for all
+ $f, g\in L^2(\Omega)$. Here, we recognize that the result is a triangular inequality for $\norm{\bullet}$.
+\item Young inequality: $2ab \leq a^2 + b^2$ for $a, b \geq 0$. The result follows from $0 \leq (a-b)^2 = a^2 -2ab + b^2$.  
+\end{enumerate}
+
+It follows from Minkowski that $\norm{\Div{u}}=\norm{\partial_1u_1 + \partial_2u_2}\leq \norm{\partial_1u_1} + \norm{\partial_2u_2}$. Squaring both
+sides we obtain 
+$\norm{\Div{u}}^2 \leq \norm{\partial_1u_1}^2 + 2\norm{\partial_1u_1}\norm{\partial_2u_2} +\norm{\partial_2u_2}^2$. The middle
+term can be split by Youngs inequatity so that 
+\begin{equation}
+\label{eq:div}
+\norm{\Div{u}}^2 \leq 2\left(\norm{\partial_1u_1}^2 + \norm{\partial_2u_2}^2\right).
+\end{equation}
+At this point we turn attention to $\Grad{u}$. Recall that $\norm{\Grad(u)}^2=\int_{\Omega} \Grad{u}:\Grad{u}$, where the inner product is
+defined as $\text{trace}\left(\Grad{u}^{\text{T}} \cdot \Grad{u}\right)$.
+Consequently
+\begin{equation}
+\label{eq:grad}
+\norm{\Grad{u}}^2 = \norm{\partial_1u_1}^2 + \norm{\partial_2u_1}^2               
+                   +\norm{\partial_1u_2}^2 + \norm{\partial_2u_2}^2.
+\end{equation}
+From (\ref{eq:div}) and (\ref{eq:grad}) we see that 
+\[
+ \norm{\Div{u}}^2 \leq 2\left(\norm{\partial_1u_1}^2 + \norm{\partial_2u_2}^2\right) \leq 2\left(\norm{\partial_1u_1}^2 + \norm{\partial_2u_1}^2               
+                    +\norm{\partial_1u_2}^2 + \norm{\partial_2u_2}^2\right)=
+                    2\norm{\Grad{u}}^2.
+\]
+Thus
+\[
+\norm{\Div{u}} \leq \sqrt{2} \norm{\Grad{u}}
+\]
+and we have prooved the claim with constant $K=\sqrt{2}$.\hfill$\blacksquare$
+
+For $\Omega\subset\mathbb{R}^3$, there would be three mixed terms in the 
+divergence norm. Splitting each one by Young's inequality leads to 
+\[
+\norm{\Div{u}}^2 \leq 3\left(\norm{\partial_1u_1}^2 + \norm{\partial_2u_2}^2 + \norm{\partial_3u_3}^2\right).
+\]
+and in turn \[
+\norm{\Div{u}} \leq \sqrt{3} \norm{\Grad{u}},
+\]
+that is the boundedness constant is $K=\sqrt{3}$. We propose that for $\Omega\subset\mathbb{R}^d$ the boundedness constant is $\sqrt{d}$.
+
+\subsection*{Improving the estimate}
+
+The above estimate can be improved for vector function $u\in
+V:=\left[H^1_0(\Omega)\right]^d$,
+$d=2, 3$. First consider the well known vector calculus identity
+
+\begin{equation}
+\label{eq:identity}
+\Curl(\Curl(u)) = \Grad(\Div{u}) - \Delta u.
+\end{equation}
+Next, assume $u\in V$, multiply (\ref{eq:identity}) by a 
+test function $v\in V$ and integrate over the domain. Integration by parts on the Laplace term together with
+the divergence theorem yield
+\[
+\int_{\Omega}-\Delta u\cdot v = -\int_{\Omega}\Div(v\cdot(\Grad{u})) + \int_{\Omega} \Grad{u} \cdot\cdot \Grad{v} = 
+-\int_{\partial\Omega}v\cdot(\Grad{u})\cdot n +
+\int_{\Omega} \Grad{u} \cdot\cdot \Grad{v}{\tiny} = 
+\int_{\Omega} \Grad{u} \cdot\cdot \Grad{v}{\tiny},
+\]
+where the surface term vanishes by $v\in V$. Similar process
+applied to the middle term in (\ref{eq:identity}) results in 
+\[
+\int_\Omega \Grad(\Div{u})\cdot v = 
+\int_{\partial\Omega} v\cdot n \Div{u}
+- \int_{\Omega}(\Div{u})(\Div{v})=
+- \int_{\Omega}(\Div{u})(\Div{v})
+.
+\]
+To see this, consider the above written with the index notation
+\[
+\partial_j(\partial_i u_i)v_j =
+\partial_j(v_j \partial_i u_i) - 
+(\partial_j u_j)(\partial_i u_i).
+\]
+In the last term, one recognizes div-div, while the first term on the right-hand side becomes 
+$v\cdot n \Div{u}$ after the divergence theorem and vanishes. Finally the curl term becomes
+\[
+\int_{\Omega}\Curl(\Curl{u})\cdot v = 
+\int_{\Omega} (\Curl{u})\cdot (\Curl{v}),
+\]
+which follows from
+\[
+(\epsilon_{ijk}\partial_j u_k) v_i = 
+\epsilon_{ijk}(\partial_j u_k v_i) -
+\epsilon_{ijk}(\partial_j v_i) u_k = 
+\epsilon_{ijk}(\partial_j u_k v_i) +
+\epsilon_{kji}(\partial_j v_i) u_k
+\]
+with $v_i = (\nabla\times v)_i$. Note that $\epsilon_{ijk}$ is the Levi-Civita
+symbol, i.e. $\epsilon_{ijk}=1$ for even permulations of $(i,j,k)=(1,2,3)$,
+$\epsilon_{ijk}=-1$ for odd permulations of $(i,j,k)=(1,2,3)$ and
+$\epsilon_{ijk}=0$ whenever 2 or 3 indices are the same. Thus in the last term,
+we recognize $(\nabla\times u)\cdot (\nabla\times v)$, whereas
+the divergence theorem transform the first term into
+$\epsilon_{ijk}n_j u_k v_i$ which vanishes on the surface.
+Thus setting $v=u$ and putting the above results together,
+we obtain
+\[
+(\Curl u, \Curl u) = -(\Div{u}, \Div{u})+(\Grad{u}, \Grad{u})
+\]
+or 
+\[
+(\Curl u, \Curl u) + (\Div{u}, \Div{u}) = (\Grad{u}, \Grad{u}).
+\]
+As all the terms are nonnegative, it follows from the last inequality that $\norm{\Div{u}} \leq \norm{\Grad{u}}$. Also we 
+have that $\norm{\Curl u} \leq \norm{\Grad{u}}$. Computational verification of this proposition can be found in \texttt{Lecture-9/grad \textunderscore div \textunderscore curl.py}.
+
+
+\end{document}

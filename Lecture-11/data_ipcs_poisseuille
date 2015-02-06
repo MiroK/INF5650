@@ -1,0 +1,28 @@
+Solving IPCS0 with 1 order of velocity space
+Time step : 0.01
+Dofs used : 3267
+Cells used : 2048
+Functional : 0.443527749633
+Pressure OK, Velocity OK
+
+Solving IPCS0 with 2 order of velocity space
+Time step : 0.01
+Dofs used : 9539
+Cells used : 2048
+Functional : 0.443258404739
+Pressure OK, Velocity OK
+
+Solving IPCS1 with 1 order of velocity space
+Time step : 0.01
+Dofs used : 3267
+Cells used : 2048
+Functional : 0.443527750262
+Pressure OK, Velocity OK
+
+Solving IPCS1 with 2 order of velocity space
+Time step : 0.01
+Dofs used : 9539
+Cells used : 2048
+Functional : 0.443258402703
+Pressure OK, Velocity OK
+

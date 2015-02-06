@@ -1,0 +1,139 @@
+\documentclass[a4paper,11pt,titlepage]{article}
+\pdfoptionpdfminorversion=5
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+%\usepackage{datetime}
+%\usepackage{cancel}
+
+\usepackage[square]{natbib}
+
+\usepackage[table]{xcolor}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{graphics}
+\usepackage{color}
+\usepackage{ifpdf}
+\ifpdf
+\DeclareGraphicsRule{*}{mps}{*}{}
+\fi
+
+%\usepackage{blindtext}
+%\usepackage[firstpage]{draftwatermark}
+%\SetWatermarkText{Anna's personal copy!}
+%\SetWatermarkScale{3}
+
+
+\newcommand{\jump}[1]{\ensuremath{[\![#1]\!]} }
+\newcommand{\VEC}[1]{\ensuremath{\textbf{#1}}}
+
+\hoffset = 0pt
+\voffset = 0pt
+\oddsidemargin = 0pt
+\headheight = 15pt
+\footskip = 30pt
+\topmargin = 0pt
+\marginparsep = 5pt
+\headsep =25pt
+\marginparwidth = 54pt
+\marginparpush = 7pt
+\textheight = 621pt %621
+\textwidth = 500pt
+
+\title{Problem Convection-Diffusion 4}
+\author{Miroslav Kuchta}
+\date{2014}
+
+\begin{document}
+ 
+
+
+\textit{
+Consider the problem 
+\[
+ \left\{ \begin{aligned}
+	  -&\mu\Delta u + \VEC{v}\cdot\nabla u = f &\text{in}\,\,\Omega,\\
+	  &u = g &\text{on}\,\,\Gamma_D = \{x\in\Omega\,|\,\VEC{v}\cdot\VEC{n} < 0\},\\
+	  &\nabla u\cdot\VEC{n} = 0 &\text{on}\,\,\Gamma_N = \{x\in\Omega\,|\,\VEC{v}\cdot\VEC{n} \geq 0\}.\\
+         \end{aligned}
+ \right.
+\]
+Investigate whether the resulting bilinear form is coercive.}
+\\
+
+The following definitions will prove useful in the course of the solution:
+\vskip 5pt
+Let $H$ be a normed linear space with norm $||\cdot||_H$, $V\subset H$. Then 
+\begin{itemize}
+ \item[] A bilinear form $a(\cdot,\cdot)$ is coercive on $V$ if there exists $\alpha>0$ such that $a(v,v)\geq\alpha||v||^2_H$ for all $v\in H$.
+ \item[] A bilinear form $s(\cdot,\cdot)$ is symmetric if $s(u,v)=s(v,u)$ for all $u,v\in H$.
+\end{itemize}
+\vskip 5pt
+
+We now proceed to derive the bilinear form of the problem. Take $\phi\in C^{\infty}(\overline{\Omega})$ such that $\phi=0$ on $\Gamma_D$. Multiplying the governing equation with $\phi$
+and integrating over the domain $\Omega$ yields an integral identity
+\begin{equation}
+\label{eq:x1}
+\int_\Omega -\mu\nabla\cdot(\nabla u)\phi+\VEC{v}\cdot(\nabla u)\phi\,\mathrm{d}x = \int_\Omega f \phi\,\mathrm{d}x.
+\end{equation}
+Since $\mu>0$ is a constant the first term in (\ref{eq:x1}) can be manipulated by product rule and Gauss theorem as follows
+\[
+-\int_\Omega \mu\nabla\cdot(\nabla u)\phi \,\mathrm{d}x = -\int_\Omega \nabla\cdot(\mu\phi\nabla u)\,\mathrm{d}x + \int_\Omega \mu\nabla u\cdot \nabla\phi \,\mathrm{d}x
+=-\int_{\partial\Omega=\Gamma_D\bigcup\Gamma_N} \mu\phi\nabla u\cdot\VEC{n}\,\mathrm{d}s + \int_\Omega \mu\nabla u\cdot \nabla\phi \,\mathrm{d}x.
+\]
+As part of the surface integral over $\Gamma_N$ vanishes due to property of the solution $\nabla u\cdot\VEC{n}=0$ on $\Gamma_N$ and the part over 
+$\Gamma_D$ vanishes due to property of the test function $\phi=0$ on $\Gamma_D$ we get that $-\int_\Omega \mu\nabla\cdot(\nabla u)\phi \,\mathrm{d}x = 
+\int_\Omega \mu\nabla u\cdot \nabla\phi \,\mathrm{d}x$. We now relax the regularity requirements on the test functions down to what is necessary in order
+for the above integrals to be well defined and we state weak formulation of the problem:
+\begin{equation*}
+\text{Find } u\in H^1_{g,\Gamma_D}(\Omega)\text{ such that}
+\int_\Omega \mu\nabla u\cdot \nabla v + \VEC{v}\cdot(\nabla u)v \,\mathrm{d}x= \int_\Omega f v \,\mathrm{d}x\,\,\,\forall v\in H^1_{0,\Gamma_D}(\Omega),
+\end{equation*}
+where $H^1_{g,\Gamma_D}(\Omega)=\left\{v\in H^1(\Omega)\,:\,v|_{\Gamma_D}=g\right\}$ and 
+$H^1_{0,\Gamma_D}(\Omega)=\left\{v\in H^1(\Omega)\,:\,v|_{\Gamma_D}=0\right\}$. In this weak formulation $H^1_{g,\Gamma_D}(\Omega)$ is not a vector space
+($u,v\in H^1_{g,\Gamma_D}(\Omega)$ does not imply $u+v\in H^1_{g,\Gamma_D}(\Omega)$). Also the formulation uses  different trial and test function spaces and thus
+does not fit well into Lax-Milgram framework where the spaces are identical. To remedy for this we suppose that there is a function $\gamma_g\in H^1(\Omega)$ such 
+that $\gamma_g|_{\Gamma_D}(\Omega)=g$. If we now define $u_0=u-\gamma_g$ we see that $u_0|_{\Gamma_D}=u|_{\Gamma_D}-\gamma_g|_{\Gamma_D}=g-g=0$ and thus $u_0\in H^1_{0,\Gamma_D}$.
+If $u=u_0+\gamma_g$ is substituted into the integral in the above weak formulation an extra term $-\int_\Omega \mu\nabla \gamma_g\cdot \nabla v + \VEC{v}\cdot(\nabla \gamma_g)v$
+appears on the right hand side. Taking this into account we state an equivalent weak formulation:
+ \begin{equation*}
+\text{Find } u_0\in V:=H^1_{0,\Gamma_D}(\Omega)\text{ such that }
+a(u_0,v)=L(v)\,\,\,\forall v\in V,
+\end{equation*}
+where have defined the bilinear forms $s(\cdot,\cdot):V\times V\mapsto R$, $w(\cdot,\cdot):V\times V\mapsto R$, $a(\cdot,\cdot):V\times V\mapsto R$ and a linear form
+$L(\cdot):V \mapsto R$ as $s(u,v)=\int_{\Omega} \mu\nabla u\cdot \nabla v\,\mathrm{d}x$, $c_{\VEC{v}}(u,v)=\int_{\Omega} \VEC{v}\cdot(\nabla u)v\,\mathrm{d}x$, 
+$a(u,v)=c_{\VEC{v}}(u,v)+w(u,v)$ and $L(v)=\int_\Omega f v \,\mathrm{d}x - a(\gamma_g,v)$.
+
+We now show that the bilinear form $a(\cdot,\cdot)$ is coercive on $V$. From the definition of coercivity we need to show that there exists $\alpha>0$ such that 
+$a(u,u)\geq\alpha||u||^2_V$ for all $u\in V$. By Poincare inequality $||\nabla(\cdot)||_{L^2}$ is a norm on $V$. For brevity we donote this norm as $||\cdot||_{V}$. From the definition of $a(\cdot,\cdot)$ we have that $a(u,u)=s(u,u)+c_{\VEC{v}}(u,u)$ 
+for all $u\in V$.
+
+The bilinear form $s(\cdot,\cdot)$ is symmetric as follows readily from its definition but more importantly it is coercive on $V$ with the diffusion constant playing the role
+of coercivity constant. To see this we calculate that
+\begin{equation}
+\label{eq:x2}
+ s(u,u)=\int_{\Omega} \mu\nabla u\cdot \nabla v\,\mathrm{d}x =\mu \int_{\Omega} \nabla u\cdot \nabla u\,\mathrm{d}x=\mu ||u||^2_V
+\end{equation}
+
+
+The establish the properties of the bilinear form $c_{\VEC{v}}(\cdot,\cdot)$ we use the product rule and the Gauss theorem to calculate that
+\begin{equation}
+\label{eq:x3}
+\begin{aligned}
+ &c_{\VEC{v}}(u,u) = \int_\Omega \VEC{v}\cdot(\nabla u) u\,\mathrm{d}x=\frac{1}{2} \int_\Omega \VEC{v}\cdot(\nabla u^2) \,\mathrm{d}x = 
+ \frac{1}{2} \int_{\Omega}\nabla\cdot(\VEC{v} u^2)\,\mathrm{d}x -  \frac{1}{2}\int_\Omega u^2 \nabla\cdot\VEC{v}\,\mathrm{d}x =\\
+ & \frac{1}{2} \int_{\partial\Omega}\VEC{v}\cdot\VEC{n} u^2\,\mathrm{d}s -  \frac{1}{2}\int_\Omega u^2 \nabla\cdot\VEC{v}\,\mathrm{d}x.
+\end{aligned}
+ \end{equation}
+If the flow is incompressible then $\nabla\cdot\VEC{v}=0$ and the corresponding volume integral in (\ref{eq:x3}) vanishes. The surface integral
+can be divided into Neumann and Dirichlet part. The latter part vanishes since $u\in V$. Consequently we get from (\ref{eq:x3}) that  
+$c_{\VEC{v}}(u,u)=\frac{1}{2} \int_{\Gamma_N}\VEC{v}\cdot\VEC{n} u^2\,\mathrm{d}s$. Since $u^2$ is positive and on the Neumann part
+of the boundary we have from its definition as outflow boundary that $\VEC{v}\cdot\VEC{n}\geq0$ we see that $c_{\VEC{v}}(u,u)\geq0$ for all $u\in V$.
+
+Putting the properties of both forms together we get that
+\[
+ a(u,u) = s(u,u) + c_{\VEC{v}}(u,u) \geq s(u,u) =\mu ||u||^2_V\,\,\,\forall u\in V.
+\]
+Thus we showed that the bilinear form $a(\cdot,\cdot)$ is coercive on $V$.
+
+\end{document}

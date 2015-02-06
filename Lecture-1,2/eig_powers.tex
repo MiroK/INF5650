@@ -1,0 +1,206 @@
+\documentclass[a4paper,11pt]{article}
+\pdfoptionpdfminorversion=5
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+%\usepackage{datetime}
+%\usepackage{cancel}
+
+\usepackage[square]{natbib}
+
+\usepackage[table]{xcolor}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{graphics}
+\usepackage{color}
+\usepackage{ifpdf}
+\ifpdf
+\DeclareGraphicsRule{*}{mps}{*}{}
+\fi
+\usepackage[utf8]{inputenc}
+
+% Default fixed font does not support bold face
+\DeclareFixedFont{\ttb}{T1}{txtt}{bx}{n}{12} % for bold
+\DeclareFixedFont{\ttm}{T1}{txtt}{m}{n}{12}  % for normal
+
+% Custom colors
+\usepackage{color}
+\definecolor{deepblue}{rgb}{0,0,0.5}
+\definecolor{deepred}{rgb}{0.6,0,0}
+\definecolor{deepgreen}{rgb}{0,0.5,0}
+
+\usepackage{listings}
+
+% Python style for highlighting
+\newcommand\pythonstyle{\lstset{
+language=Python,
+basicstyle=\ttm,
+otherkeywords={self},             % Add keywords here
+keywordstyle=\ttb\color{deepblue},
+emph={MyClass,__init__},          % Custom highlighting
+emphstyle=\ttb\color{deepred},    % Custom highlighting style
+stringstyle=\color{deepgreen},
+frame=tb,                         % Any extra options here
+showstringspaces=false            % 
+}}
+
+
+% Python environment
+\lstnewenvironment{python}[1][]
+{
+\pythonstyle
+\lstset{#1}
+}
+{}
+
+% Python for external files
+\newcommand\pythonexternal[2][]{{
+\pythonstyle
+\lstinputlisting[#1]{#2}}}
+
+% Python for inline
+\newcommand\pythoninline[1]{{\pythonstyle\lstinline!#1!}}
+
+
+\newcommand{\jump}[1]{\ensuremath{[\![#1]\!]} }
+\newcommand{\VEC}[1]{\ensuremath{\textbf{#1}}}
+
+\hoffset = 0pt
+\voffset = 0pt
+\oddsidemargin = 0pt
+\headheight = 15pt
+\footskip = 30pt
+\topmargin = 0pt
+\marginparsep = 5pt
+\headsep =25pt
+\marginparwidth = 54pt
+\marginparpush = 7pt
+\textheight = 621pt %621
+\textwidth = 500pt
+
+\title{Computing Sobolev norms using powers of eigenvalues\\ of the
+ stiffness matrix}
+ \author{Miroslav Kuchta}
+ \date{2014}
+
+\begin{document}
+\maketitle
+
+Consider the eigenvalue problem: Find $u\in V$, $\lambda\in\mathbb{C}$ such that 
+\begin{equation}
+ \label{p1}
+-u_{xx}=\lambda u
+\end{equation}
+where functions $u\in V$ are such that $u(0)=u(1)=0$. Using ansatz for the
+solution, $u(x)=\exp(\alpha x)$, recover a characteristic polynomial
+\[
+-\alpha^2 = \lambda.
+\]
+Thus, the solution is a linear combination of $\sin(\sqrt{\lambda}x)$ and
+$\cos(\sqrt{\lambda}x)$. The boundary condition $u(0)=0$ eliminates cosines,
+while the other boundary condition requires eigenvalues
+$\lambda=(k\pi)^2, k=1,2,...$. The corresponding eigenvectors are
+$\phi_k(x)=\sin(k\pi x)$. The eigenvectors are perpendicular in a $L^2$-inner 
+product $(\cdot,\cdot)$. Further, redefining $\phi_k=\sqrt{2}\phi_k$ makes the
+vectors orthonormal. Note, that the vectors produced by octave/SLEPc are
+normalized. Finally, the eigenvalues are real and positive. All the above
+properties could have been established by observing that on $V$ the Laplacian
+is symmetric and positive definite operator.
+
+Since the eigenvalues are all distinct we get $n=\text{dim}(V_h)$ eigenvectors
+that form orthonormal basis of $V_h$. Consequently every function $u$ can be 
+represented in $V_h$ as $u(x)=c_k\phi_k(x)$, where $c_k$ are coefficients given
+by $c_k=(u, \phi_k)$. 
+
+Let us now compute the $L^2$-norm of $u$. Using the definition of the norm,
+the representation of $u$ and orthonormality of the basis we get
+\[
+||u||^2 = (u, u) = (c_k \phi_k, c_i \phi_i)=c_k c_i \delta_{ki}=c_k^2=(u, \phi_k)^2.
+\]
+It remains to compute the inner product $(u, \phi_k)$. Denoting the nodal basis
+function of $V_h$ as $\varphi_i, i=1, 2, ..., n$., functions $u$ and $\phi_k$
+can be represented as
+\[
+\begin{aligned}[c]
+&u(x)=U_i\varphi_i(x),\\
+&\phi_k(x)=F^k_j\varphi_j(x).\\
+\end{aligned}
+\]
+Thus the inner product of $u$ and the $k$-th eigenvector is computed as 
+\[
+(u, \phi_k)=\int_0^1u(x)\phi_k(x)=\int_0^1 U_i\varphi_i(x) F^k_j\varphi_j(x) =
+U_i \left[\int_0^1 \varphi_i(x) \varphi_j(x)\right] F^k_j.
+\]
+The bracketed term are the entries of the mass matrix $M$. Putting elements $U_i$ into vector $U$ and similarly for $F^K_j$ to form vector $F^k$, the inner
+product can be written as $(u, \phi_k) = U\cdot M\cdot F^k$.
+Finally the $L^2$-norm of $u$ is 
+\begin{equation}
+\label{eq:l2norm}
+||u||=\sqrt{(U\cdot M\cdot F^k)^2}.
+\end{equation}
+
+Kent's code would simplify the mass matrix as $M=hI$ where $h$ was the mesh
+size $h=1/n$. The simplification is based on using the midpoint quadrature to
+evaluate the integral.This is the reason why the $L^2$-norm has the  \pythoninline{len(ex)} term; it is the $dx$ or the length of the cell.
+
+\begin{python}
+sqrt(ex.T*l**0*ex) / len(ex)
+\end{python}
+
+Approximating the mass matrix by identity matrix leads to bigger errors if
+higher order Lagrange elements are used. This is shown in Table
+\ref{table:comparison}. The error is especially big if we look at $H^1_0$-norm.
+Let us now see how that quantity is computed.
+
+Multiplying (\ref{p1}) by the test function $v\in V$ leads to a variational 
+formulation of the eigenvalue problem: Find $u\in V$, $\lambda\in\mathbb{C}$
+such that
+\begin{equation}
+\label{eq:eigen}
+(u_x, v_x) = \lambda(u, v),\quad\forall v\in V.
+\end{equation}
+Note that the finite element discretization of the variational problem would 
+lead to the generalized eigenvalue problem $AU=\lambda MU$. Computation of 
+the $H^1_0$-norm is based on (\ref{eq:eigen}) and the ideas explained in the
+previous section. We get
+\begin{equation}
+\label{eq:final}
+||u_x||^2=(u_x, u_x)=c_kc_i(\phi_{k,x}, \phi_{i,x})=
+c_kc_k\lambda^k(\phi_k, \phi_i)=
+c_kc_k\lambda^k=\lambda^k(U\cdot M\cdot F^k)^2.
+\end{equation}
+
+Formulas (\ref{eq:l2norm}) and (\ref{eq:final}) are mirrored in the code shown
+at the end of the text. The code produce results in Table \ref{table:comparison}
+which are in excellent agreement with norms produced by integration. The 
+errors can be attributed to errors of eigenvalues/eigenvector calculations
+that are due to octave routines. For convenience and easier comparison, code
+using the approximate quadrature is also attached. 
+
+\begin{table}
+\begin{center}
+ \caption{Comparison of errors of the $L^2$ and $H^1_0$ norms of $\sin{\pi x}$.
+ The error is the difference between eigenvalue based norm and the norm computed by finite element integration. Results in the first two columns are
+ obtained with code that uses midpoint rule for all integrations. The last two
+ columns show results of code that uses mass matrix. 
+ }
+  \label{table:comparison}
+ \begin{tabular}{ |c|c|c|c|c|}
+   \hline
+   -- & \multicolumn{2}{c|}{Inexact} & \multicolumn{2}{c|}{Exact}\\
+   \hline
+    p & $H^1_0$ & $L^2$ & $H^1_0$ & $L^2$\\
+   \hline
+		1 & 4E-3  & 1E-3 &   2E-11     &    1E-16 \\
+		2 & 1E3   & 1E-1 &   4E-10     &    2E-16 \\
+		3 & 6E2   & 2E-2 &   9E-10     &  9E-16 \\
+   \hline
+ \end{tabular}
+\end{center}
+\end{table}
+
+\newpage
+\pythonexternal{eig_kent.py}{\begin{center}Code using midpoint rule.\end{center}}
+\newpage
+\pythonexternal{eig_powers.py}{\begin{center}Code using exact integration. rule.\end{center}}
+\end{document}
